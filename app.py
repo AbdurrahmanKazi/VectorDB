@@ -42,7 +42,7 @@ page = st.sidebar.radio("Go to", ["Instructions", "Upload File", "Search", "Add 
 
 # Load or initialize the dataframe
 if 'df' not in st.session_state:
-    predefined_file = "vector_final_db.csv"
+    predefined_file = "vector_db.csv"
     if os.path.exists(predefined_file):
         st.session_state.df = load_data(predefined_file)
     else:
