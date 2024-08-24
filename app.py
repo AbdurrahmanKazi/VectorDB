@@ -33,9 +33,22 @@ def search_similar(query, df, top_k=5):
     return df.sort_values('similarity', ascending=False).head(top_k)
 
 def load_data(file):
-    df = pd.read_csv(file)
-    df['vector_embedding'] = df['vector_embedding'].apply(lambda x: np.fromstring(x, sep=','))
-    return df
+    try:
+        df = pd.read_csv(file)
+        
+        # Check if the required columns are present
+        required_columns = ['chunk_id', 'document_id', 'chunk_text', 'vector_embedding']
+        if not all(col in df.columns for col in required_columns):
+            st.warning("The uploaded CSV file is missing one or more required columns.")
+            return pd.DataFrame(columns=required_columns)
+        
+        # Convert 'vector_embedding' column from string to numpy array
+        df['vector_embedding'] = df['vector_embedding'].apply(lambda x: np.fromstring(x, sep=','))
+        return df
+    except Exception as e:
+        st.error(f"Error loading file: {str(e)}")
+        return pd.DataFrame(columns=required_columns)
+
 
 # Sidebar for navigation
 st.sidebar.title("Navigation")
